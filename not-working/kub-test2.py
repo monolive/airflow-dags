@@ -15,31 +15,34 @@ default_args = {
     'retry_delay': timedelta(minutes=5)
 }
 
-dag = DAG(
-    'kubernetes_sample', default_args=default_args, schedule_interval=timedelta(minutes=10))
+dag = DAG( 'kubernetes_sample', default_args=default_args, schedule_interval=timedelta(minutes=10))
 
 
 start = DummyOperator(task_id='run_this_first', dag=dag)
 
-passing = KubernetesPodOperator(namespace='default',
+passing = KubernetesPodOperator(namespace='airflow',
                           image="Python:3.6",
                           cmds=["Python","-c"],
                           arguments=["print('hello world')"],
-                          labels={"foo": "bar"},
+#                          labels={"foo": "bar"},
                           name="passing-test",
                           task_id="passing-task",
                           get_logs=True,
+                          in_cluster=False,
+                          #config_file=["/home/renaulto/.kube/config"],
                           dag=dag
                           )
 
-failing = KubernetesPodOperator(namespace='default',
+failing = KubernetesPodOperator(namespace='airflow',
                           image="ubuntu:1604",
                           cmds=["Python","-c"],
                           arguments=["print('hello world')"],
-                          labels={"foo": "bar"},
+#                          labels={"foo": "bar"},
                           name="fail",
                           task_id="failing-task",
                           get_logs=True,
+                          in_cluster=True,
+                          config_file=["/home/renaulto/.kube"],
                           dag=dag
                           )
 
