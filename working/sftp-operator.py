@@ -31,24 +31,24 @@ sftp = SFTPSensor(
 	task_id = 'sftp_check',
 	path = 'data/filelist.txt',
 	sftp_conn_id = 'sftp_beefy',
-        poke_interval = 10,
-        mode = 'poke',
-        soft_fail = False,
+    poke_interval = 10,
+    mode = 'poke',
+    soft_fail = False,
 	dag = dag,
 	)
 
 nextStep = KubernetesPodOperator(namespace='airflow',
-                        image="python:3.6-stretch",
-                        image_pull_policy="Always",
-                        cmds=["python","-c"],
-                        arguments=["print('hello world')"],
-                        name="python",
-                        task_id="startPython",
-                        is_delete_operator_pod=True,
-                        hostnetwork=False,
-                        dag=dag,
-                        in_cluster=False,
-                        )
+    image="python:3.6-stretch",
+    image_pull_policy="Always",
+    cmds=["python","-c"],
+    arguments=["print('hello world')"],
+    name="python",
+    task_id="startPython",
+    is_delete_operator_pod=True,
+    hostnetwork=False,
+    dag=dag,
+    in_cluster=False,
+    )
 
 sftp.set_upstream(start)
 nextStep.set_upstream(sftp)
