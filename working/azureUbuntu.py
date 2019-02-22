@@ -1,3 +1,6 @@
+#
+# NOT WORKING NEED TO ENABLE KUBECTL TO ACCESS ACR
+#
 #from airflow.contrib.operators import KubernetesOperator
 from datetime import datetime, timedelta
 from airflow import DAG
